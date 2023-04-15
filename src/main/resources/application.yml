@@ -1,0 +1,10 @@
+git:
+  login: "user"
+  password: "password"
+  url: "https://github.com/nnhhard/otus-2022-11-iashinme"
+  folder: "home-work-05/src/main/java/ru/iashinme/homework05/service/"
+
+spring:
+  profiles:
+    active: "test"
+
