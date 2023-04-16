@@ -1,5 +1,7 @@
 package com.example.gitintegrationservice.service;
 
+import com.example.gitintegrationservice.dto.FileDto;
+import com.example.gitintegrationservice.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -10,12 +12,18 @@ public class FilesProviderGit implements FilesProvider {
     private final GitService gitService;
 
     @Override
-    public String getContentFileByName(String fileName) {
-        return gitService.getContentFileByNameAndCommitId(fileName, null);
+    public FileDto getContentFileByName(String fileName) {
+        var commitId = gitService.getLastCommitId();
+
+        return gitService.getContentFileByNameAndCommitId(fileName, commitId).orElseThrow(
+                () -> new NotFoundException("File " + fileName + " not found")
+        );
     }
 
     @Override
-    public String getContentFileByNameAndCommitId(String fileName, String commitId) {
-        return gitService.getContentFileByNameAndCommitId(fileName, commitId);
+    public FileDto getContentFileByNameAndCommitId(String fileName, String commitId) {
+        return gitService.getContentFileByNameAndCommitId(fileName, commitId).orElseThrow(
+                () -> new NotFoundException("File " + fileName + " not found in commit " + commitId)
+        );
     }
 }

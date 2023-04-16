@@ -1,5 +1,6 @@
 package com.example.gitintegrationservice.rest;
 
+import com.example.gitintegrationservice.dto.FileDto;
 import com.example.gitintegrationservice.service.FilesProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -14,22 +15,12 @@ public class FileController {
     private final FilesProvider filesService;
 
     @GetMapping("/api/v1/file/{name}")
-    public ResponseEntity<String> getFileContentByName(@PathVariable String name) {
-        String file = filesService.getContentFileByName(name);
-        if(file == null) {
-            return ResponseEntity.notFound().build();
-        } else {
-            return ResponseEntity.ok(file);
-        }
+    public ResponseEntity<FileDto> getFileContentByName(@PathVariable String name) {
+        return ResponseEntity.ok(filesService.getContentFileByName(name));
     }
 
     @GetMapping("/api/v1/file/{name}/{commitId}")
-    public ResponseEntity<String> getFileContentByNameAndCommitId(@PathVariable String name, @PathVariable String commitId) {
-        String file = filesService.getContentFileByNameAndCommitId(name, commitId);
-        if(file == null) {
-            return ResponseEntity.notFound().build();
-        } else {
-            return ResponseEntity.ok(file);
-        }
+    public ResponseEntity<FileDto> getFileContentByNameAndCommitId(@PathVariable String name, @PathVariable String commitId) {
+        return ResponseEntity.ok(filesService.getContentFileByNameAndCommitId(name, commitId));
     }
 }

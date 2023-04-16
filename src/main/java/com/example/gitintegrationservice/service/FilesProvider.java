@@ -1,8 +1,10 @@
 package com.example.gitintegrationservice.service;
 
+import com.example.gitintegrationservice.dto.FileDto;
+
 public interface FilesProvider {
 
-    String getContentFileByName(String fileName);
+    FileDto getContentFileByName(String fileName);
 
-    String getContentFileByNameAndCommitId(String fileName, String commitId);
+    FileDto getContentFileByNameAndCommitId(String fileName, String commitId);
 }

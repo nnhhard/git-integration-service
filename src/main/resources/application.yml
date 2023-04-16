@@ -6,5 +6,5 @@ git:
 
 spring:
   profiles:
-    active: "test"
+    active: "prod"
 
