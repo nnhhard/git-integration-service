@@ -1,7 +1,7 @@
 package com.example.gitintegrationservice.rest;
 
 import com.example.gitintegrationservice.dto.FileDto;
-import com.example.gitintegrationservice.service.FilesProvider;
+import com.example.gitintegrationservice.service.FileProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class FileController {
 
-    private final FilesProvider filesService;
+    private final FileProvider filesService;
 
     @GetMapping("/api/v1/file/{name}")
     public ResponseEntity<FileDto> getFileContentByName(@PathVariable String name) {

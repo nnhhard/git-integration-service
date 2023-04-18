@@ -13,6 +13,7 @@ import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevTree;
 import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.transport.RefSpec;
+import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.eclipse.jgit.treewalk.TreeWalk;
 import org.eclipse.jgit.treewalk.filter.PathFilter;
 import org.springframework.stereotype.Service;
@@ -25,12 +26,11 @@ import java.util.Optional;
 public class GitServiceImpl implements GitService {
 
     private final GitDetailsConfig gitDetailsConfig;
-    private final CredentialsProviderService credentialsProviderService;
+    private final UsernamePasswordCredentialsProvider usernamePasswordCredentialsProvider;
 
     @Override
     public String getLastCommitId() {
-        try (InMemoryRepository repo = new InMemoryRepository(new DfsRepositoryDescription());
-             Git git = new Git(repo)) {
+        try (InMemoryRepository repo = new InMemoryRepository(new DfsRepositoryDescription()); Git git = new Git(repo)) {
 
             gitFetch(git);
 
@@ -42,32 +42,32 @@ public class GitServiceImpl implements GitService {
 
     @Override
     public Optional<FileDto> getContentFileByNameAndCommitId(String fileName, String commitId) {
-        try (InMemoryRepository repo = new InMemoryRepository(new DfsRepositoryDescription());
-             Git git = new Git(repo)) {
+        byte[] file;
+        try (InMemoryRepository repo = new InMemoryRepository(new DfsRepositoryDescription()); Git git = new Git(repo)) {
 
             gitFetch(git);
 
-            byte[] file = findCommit(repo, commitId, fileName);
-
-            return file == null ?
-                    Optional.empty() :
-                    Optional.of(FileDto.builder()
-                            .name(fileName)
-                            .commitId(commitId)
-                            .file(file)
-                            .build());
+            file = findCommit(repo, commitId, fileName);
         } catch (Exception e) {
             throw new GitException(e.getMessage());
         }
+
+        return file == null ?
+                Optional.empty() :
+                Optional.of(FileDto
+                        .builder()
+                        .name(fileName)
+                        .commitId(commitId)
+                        .file(file)
+                        .build());
     }
 
     private void gitFetch(Git git) {
         try {
             git.fetch()
                     .setRemote(gitDetailsConfig.getUrl())
-                    .setCredentialsProvider(credentialsProviderService.getUserCredentialsProvider())
-                    .setRefSpecs(new RefSpec("+refs/heads/*:refs/heads/*"))
-                    .call();
+                    .setCredentialsProvider(usernamePasswordCredentialsProvider)
+                    .setRefSpecs(new RefSpec("+refs/heads/*:refs/heads/*")).call();
         } catch (Exception e) {
             throw new GitException(e.getMessage());
         }
@@ -85,8 +85,7 @@ public class GitServiceImpl implements GitService {
     }
 
     private byte[] findFileInTree(InMemoryRepository repo, RevTree tree, String fileName) {
-        try (TreeWalk treeWalk = new TreeWalk(repo);
-             ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+        try (TreeWalk treeWalk = new TreeWalk(repo); ByteArrayOutputStream out = new ByteArrayOutputStream()) {
             treeWalk.addTree(tree);
             treeWalk.setRecursive(true);
             treeWalk.setFilter(PathFilter.create(gitDetailsConfig.getFolder() + fileName));

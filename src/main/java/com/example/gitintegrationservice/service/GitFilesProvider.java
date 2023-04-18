@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class FilesProviderGit implements FilesProvider {
+public class GitFilesProvider implements FileProvider {
 
     private final GitService gitService;
 
