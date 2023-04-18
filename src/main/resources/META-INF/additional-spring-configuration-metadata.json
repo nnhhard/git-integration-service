@@ -1,18 +1,19 @@
 {
   "properties": [
     {
-      "name": "git.login",
+      "name": "git.url",
       "type": "java.lang.String",
-      "description": "Description for git.login."
-    },
-    {
-      "name": "git.password",
-      "type": "java.lang.String",
-      "description": "Description for git.password."
+      "description": "git url repository."
     },
     {
       "name": "git.folder",
       "type": "java.lang.String",
-      "description": "Description for git.folder."
+      "description": "git folder for find files."
+    },
+    {
+      "name": "git.branch",
+      "type": "java.lang.String",
+      "description": "git branch."
     }
-  ] }
+  ]
+}
