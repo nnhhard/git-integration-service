@@ -1,7 +1,16 @@
 package com.example.gitintegrationservice.config;
 
-public interface CredentialsProviderConfig {
+import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
-    public String getLogin();
-    public String getPassword();
+@Configuration
+public class CredentialsProviderConfig {
+    @Bean
+    public UsernamePasswordCredentialsProvider credentialsProvider(
+            @Value("${git.login}") String login,
+            @Value("${git.password}") String password) {
+        return new UsernamePasswordCredentialsProvider(login, password);
+    }
 }

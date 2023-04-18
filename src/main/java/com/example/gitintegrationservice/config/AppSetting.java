@@ -7,10 +7,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @Setter
 @Getter
 @ConfigurationProperties(prefix = "git")
-public class AppSetting implements GitDetailsConfig, CredentialsProviderConfig {
+public class AppSetting implements GitDetailsConfig {
 
-    private String login;
-    private String password;
     private String url;
     private String folder;
     private String branch;

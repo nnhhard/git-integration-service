@@ -2,7 +2,7 @@ package com.example.gitintegrationservice.service;
 
 import com.example.gitintegrationservice.dto.FileDto;
 
-public interface FilesProvider {
+public interface FileProvider {
 
     FileDto getContentFileByName(String fileName);
 
