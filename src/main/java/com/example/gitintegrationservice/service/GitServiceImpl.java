@@ -16,6 +16,7 @@ import org.eclipse.jgit.transport.RefSpec;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.eclipse.jgit.treewalk.TreeWalk;
 import org.eclipse.jgit.treewalk.filter.PathFilter;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
@@ -41,6 +42,7 @@ public class GitServiceImpl implements GitService {
     }
 
     @Override
+    @Cacheable("fileDtoHash")
     public Optional<FileDto> getContentFileByNameAndCommitId(String fileName, String commitId) {
         byte[] file;
         try (InMemoryRepository repo = new InMemoryRepository(new DfsRepositoryDescription()); Git git = new Git(repo)) {
